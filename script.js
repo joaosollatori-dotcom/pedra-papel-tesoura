@@ -1,3 +1,9 @@
+const showResult = document.createElement("div")
+const showResultText = document.createElement("p")
+
+showResult.appendChild(showResultText)
+document.body.appendChild(showResult)
+
 // Fazer o computador escolher uma opção aleatoria
 function getComputerChoice() {
     const choiceComputer = ["pedra", "papel", "tesoura"];
@@ -6,45 +12,34 @@ function getComputerChoice() {
     return choiceComputer[indiceAleatorio]
 }
 
-// Pegar a escolha do usuário e a retorna
-function getHumanChoice() {
-    let choiceUser = prompt("pedra, papel ou tesoura? ");
-    console.log(choiceUser);
-    return choiceUser
-}
-
-function playGame() {
-    let humanScore = 0;
-    let computerScore = 0;
-
-    function playRound(humanChoice, computerChoice) {
-        humanChoiceNormalize = humanChoice.toLowerCase();
-        if (humanChoiceNormalize === computerChoice) {
-            console.log("Deu empate abestado!");
-        } else if (humanChoiceNormalize === "pedra" && computerChoice === "tesoura") {
-            humanScore++
-            console.log("Voce venceu.");
-        } else if (humanChoiceNormalize === "tesoura" && computerChoice === "papel") {
-            humanScore++
-            console.log("Voce venceu.");
-        } else if (humanChoiceNormalize === "papel" && computerChoice === "pedra") {
-            humanScore++
-            console.log("Voce venceu.");
-        } else {
-            computerScore++
-            console.log("Você perdeu")
-        }
-    }
-
-    // REMOVIDO A LÓGICA QUE JOGA 5 RODADAS
+function playRound(humanChoice, computerChoice) {
+    humanChoiceNormalize = humanChoice.toLowerCase();
     
-    if (humanScore === computerScore) {
-        console.log("Empate! Jogue novamente.")
-    } else if (humanScore > computerScore) {
-        console.log("Você venceu o jogo!")
+    if (humanChoiceNormalize === computerChoice) {
+        showResultText.textContent = `Você escolheu ${humanChoiceNormalize} e o computador escolheu ${computerChoice}, deu empate! Placar: Você ${humanScore} x ${computerScore} Computador`
+    } else if (humanChoiceNormalize === "pedra" && computerChoice === "tesoura" || humanChoiceNormalize === "tesoura" && computerChoice === "papel" || humanChoiceNormalize === "papel" && computerChoice === "pedra") {
+        humanScore++     
+        showResultText.textContent = `Você escolheu ${humanChoiceNormalize} e o computador escolheu ${computerChoice}, você venceu!  Placar: Você ${humanScore} x ${computerScore} Computador`
     } else {
-        console.log("Você perdeu o jogo!")
+        computerScore++
+        showResultText.textContent = `Você escolheu ${humanChoiceNormalize} e o computador escolheu ${computerChoice}, você perdeu! Placar: Você ${humanScore} x ${computerScore} Computador`
+    }
+
+    if (humanScore === 5) {
+        showResultText.textContent = "🏆 FIM DE JOGO! Você atingiu 5 pontos e venceu a partida!"
+    } else if (computerScore === 5) {
+        showResultText.textContent = "💀 FIM DE JOGO! O computador atingiu 5 pontos e venceu a partida!"
     }
 }
 
-playGame();
+let humanScore = 0;
+let computerScore = 0;
+
+const playGame = document.querySelector("#botoes") 
+playGame.addEventListener("click", (event) => {
+    let playerSelection = event.target.id
+    let computerSelection = getComputerChoice()
+
+    playRound(playerSelection, computerSelection)
+})
+
